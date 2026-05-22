@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-export default function ProductCard({ product, index, whatsappNumber }) {
+export default function ProductCard({ product, index, onOrder }) {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
 
@@ -12,12 +12,6 @@ export default function ProductCard({ product, index, whatsappNumber }) {
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, [index]);
-
-  const openWhatsApp = (productName, price) => {
-    const msg = `¡Hola! Me gustaría pedir *${productName}* que vi en su catálogo online. El precio es $${price.toLocaleString("es-AR")}.`;
-    const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`;
-    window.open(url, "_blank");
-  };
 
   return (
     <div
@@ -49,12 +43,18 @@ export default function ProductCard({ product, index, whatsappNumber }) {
         <p className="m-0 text-[11px] text-[#888] leading-[1.5] flex-1">
           {product.desc}
         </p>
+        <div className="flex items-center gap-1 mt-1">
+          <span className="text-[10px] font-bold text-[#555]">Extras:</span>
+          <span className="text-[10px] bg-[#fff3ed] text-brand rounded-full py-[2px] px-2 font-semibold">
+            Bebidas
+          </span>
+        </div>
         <div className="flex items-center justify-between mt-2 gap-2">
           <span className="text-[17px] font-extrabold text-brand font-playfair">
             ${product.price.toLocaleString("es-AR")}
           </span>
           <button
-            onClick={() => openWhatsApp(product.name, product.price)}
+            onClick={() => onOrder(product)}
             className="brand-gradient text-white border-none rounded-[10px] py-[7px] px-3 text-[11px] font-bold cursor-pointer whitespace-nowrap transition-all duration-150 shadow-[0_3px_10px_rgba(255,75,31,0.35)] hover:scale-105 hover:shadow-[0_5px_16px_rgba(255,75,31,0.5)]"
           >
             Pedir →
